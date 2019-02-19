@@ -7,7 +7,7 @@ CREATE TABLE products(
     product_name VARCHAR(50),
     department_name VARCHAR(50),
     price INTEGER(10),
-    stock_quantity  INTEGER(10)
+    stock_quantity INTEGER(10)
 );
 
 INSERT INTO products(product_name, department_name, price, stock_quantity) 

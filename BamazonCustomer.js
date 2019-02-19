@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var inquirer = require("inquirer");
+var chalk = require("chalk")
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -20,10 +21,15 @@ connection.connect(function (err) {
 
 var queryProducts = function () {
     connection.query("SELECT * FROM products ", function (err, res) {
+        console.log(chalk.yellow.inverse.italic.bold("Welcome To Bamazon! Please select from the list of products below."))
+        console.log("_____________________________________________________________________")
+        console.log(chalk.inverse("Item ID || Product Name || Department || Price || Invetory ||"))
+        console.log("---------------------------------------------------------------------")
+        if(err) throw err;
         for (var i = 0; i < res.length; i++) {
-            console.log(res[i].item_id + " || " + res[i].product_name + " || " + res[i].department_name + " || " + res[i].price + " || " + res[i].stock_quantity + "\n");
+            console.log(chalk.blue(res[i].item_id) + " || " +(chalk.yellow(res[i].product_name)) + " || " + (chalk.cyan(res[i].department_name)) + " || " +(chalk.green(res[i].price)) + " || " +(chalk.red(res[i].stock_quantity)) + "\n");
         };
-        console.log("-----------------------------------------------");
+        console.log("------------------------------------------------------");
 
         promptCustomer(res);
     })
@@ -34,18 +40,18 @@ var promptCustomer = function (res) {
         .prompt([
             {
                 type: "input",
-                name: "buy",
+                name: "choice",
                 message: "Enter the ID of the Item you would like to buy. [if not ready, Quit with Q]"
             }
         ]).then(function (answer) {
             var correct = false;
-            if (answer.buy.toUpperCase() == "Q")
+            if (answer.choice.toUpperCase() == "Q")
                 process.exit();
             for (var i = 0; i < res.length; i++) {
-                if (res[i].item_id == answer.buy) {
+                if (res[i].item_id == answer.choice) {
                     correct = true;
-                    var product = answer.buy;
-                    var id = i;
+                    var product = answer.choice;
+                    var id= i;
                     inquirer.prompt({
                         type: "input",
                         name: "quant",
@@ -59,23 +65,31 @@ var promptCustomer = function (res) {
                             }
                         }
                     }).then(function (answer) {
-                        if ((res[id].stock_quantity-answer.quant) > 0) {
-                            connection.query("UPDATE products SET stock_quantity = " + (res[id].stock_quantity-answer.quant) + "WHERE product_name= " + product, function (err, res2) {
-                                console.log("Product Bought!");
+                        if((res[id].stock_quantity - answer.quant)> 0) {
+                            connection.query("UPDATE products SET stock_quantity = " + (res[id].stock_quantity - answer.quant) + 
+                            " WHERE item_id= " + product, function (err, res2) {
+                                console.log(chalk.inverse.bold("Product Purchased Succefully!"));
+                                var totalCost = res[id].price * product.quant;
+                                console.log("======================================================");
+                                // console.log("Total: "+ " $"+ totalCost)                                
                                 queryProducts();
 
-                            })
-                        } else {
-                            console.log("Selection is not valid");
+                       })
+                    }
+                        else {
+                            console.log(chalk.bgRed.bold("Sorry, We do not have the inventory for the amount Requested."));
+                            console.log(chalk.bgGreen.bold("*****Please place order for less quantities*****"));
                             promptCustomer(res);
                         }
                     })
                 }
             }
             if (i == res.length && correct == false) {
-                console.log("Nota Valid Selection!");
+                console.log("Not a Valid Selection!");
                 promptCustomer(res);
             }
         })
 
 }
+
+
