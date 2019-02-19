@@ -6,10 +6,10 @@ var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
     user: "root",
-    password: "",
+    password: "Josafat18",
     database: "bamazon_db"
 });
-
+//setting connection MYsql data base
 connection.connect(function (err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
@@ -18,7 +18,7 @@ connection.connect(function (err) {
 
     // connection.end();
 });
-
+//prompting use to see what is available for them to purchase
 var queryProducts = function () {
     connection.query("SELECT * FROM products ", function (err, res) {
         console.log(chalk.yellow.inverse.italic.bold("Welcome To Bamazon! Please select from the list of products below."))
@@ -34,7 +34,7 @@ var queryProducts = function () {
         promptCustomer(res);
     })
 };
-
+//allows user to search andpurchase by item_id
 var promptCustomer = function (res) {
     inquirer
         .prompt([
@@ -45,6 +45,7 @@ var promptCustomer = function (res) {
             }
         ]).then(function (answer) {
             var correct = false;
+//If user is not ready to make a purchase or does not want to make a second puchase they can Exit the App by pressing "Q".
             if (answer.choice.toUpperCase() == "Q")
                 process.exit();
             for (var i = 0; i < res.length; i++) {
@@ -61,22 +62,24 @@ var promptCustomer = function (res) {
                                 return true;
                             } else {
                                 return false;
-
                             }
                         }
                     }).then(function (answer) {
+                        
                         if((res[id].stock_quantity - answer.quant)> 0) {
+                            //This will Update the products database after user buys x amount of items.
                             connection.query("UPDATE products SET stock_quantity = " + (res[id].stock_quantity - answer.quant) + 
                             " WHERE item_id= " + product, function (err, res2) {
-                                console.log(chalk.inverse.bold("Product Purchased Succefully!"));
-                                var totalCost = res[id].price * product.quant;
+                                console.log(chalk.inverse.bold("Product Purchased Successfully!"));
+                                var totalCost = (parseFloat(res[0].price) *product.quant).toFixed(2);
                                 console.log("======================================================");
-                                // console.log("Total: "+ " $"+ totalCost)                                
+                                console.log("Total: "+ " $"+ {totalCost})                                
                                 queryProducts();
 
                        })
                     }
                         else {
+                            //this message will appear only if user select a higher quantity than is available in stock.
                             console.log(chalk.bgRed.bold("Sorry, We do not have the inventory for the amount Requested."));
                             console.log(chalk.bgGreen.bold("*****Please place order for less quantities*****"));
                             promptCustomer(res);
@@ -84,6 +87,7 @@ var promptCustomer = function (res) {
                     })
                 }
             }
+            //user must select from items ID's provided if not erros message will appear.
             if (i == res.length && correct == false) {
                 console.log("Not a Valid Selection!");
                 promptCustomer(res);
