@@ -71,10 +71,10 @@ var promptCustomer = function (res) {
                             connection.query("UPDATE products SET stock_quantity = " + (res[id].stock_quantity - answer.quant) +
                                 " WHERE item_id= " + product, function (err, res2) {
                                     console.log(chalk.inverse.bold("Product Purchased Successfully!"));
-                                    var totalCost = (parseFloat(res[0].price) * answer.quant).toFixed(2);
+                                    var totalCost = (parseInt(res[id].price) * answer.quant).toFixed(2);
                                     console.log("======================================================");
-                                    console.log("Total: " + " $" + totalCost)
-                                    queryProducts();
+                                    console.log(chalk.green("Total: " + " $" + totalCost))
+                                    promptCustomer();
 
                                 })
                         }
