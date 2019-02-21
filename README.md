@@ -15,10 +15,23 @@ The customer interface allows the user to view the current inventory of store it
 
 * He will then be prompted with a commmand: "Enter the ID of the Item you would like to buy.[If not ready, Quit with Q]"
     * If customer is not ready he can Quit the app by pressing "Q".
+    * After selecting the product the customer desires he will be asked the following: "How many Items would you like to buy?"
+![amount](assets/images/amount.png) ![quit](assets/images/quit.png) 
 
-* After selecting the product the customer desires he will be asked the following: "How many Items would you like to buy?"
+* Customer must select a product by using its item ID, if not he will be shown "NOT a valid Slection". same will apply if they try to type the name of the product.
+
+![invalid] (assets/images/invalid.png) ![invalid2] (assets/images/invalid2.png)
 
 * After customer types a desired amount, he will be shown the name of the product and if it was successfully purchased or an error message if we do not have enough product in stock. 
+![successfully](assets/images/succesfully.png)
+
+* If purchse is successful then it will provide the customer with a Total amount.
+![totalcost](assets/images/totalcost.png)
+
+* Customer can purchase multiple items unless store no longer has them in stock. If customer chooses and amount that higher than sore has in stock, they will be shown an error message.
+![error] (assets/images/error.png)
+
+
 
 # Technology Used
 
