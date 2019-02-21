@@ -26,12 +26,12 @@ The customer interface allows the user to view the current inventory of store it
 
 * After customer types a desired amount, he will be shown the name of the product and if it was successfully purchased or an error message if we do not have enough product in stock. 
 ![successfully](assets/images/successfully.png)
+![error](assets/images/error.png)
 
-* If purchse is successful then it will provide the customer with a Total amount.
+* If purchase is successful then it will provide the customer with a Total amount.
 ![totalcost](assets/images/totalcost.png)
 
-* Customer can purchase multiple items unless store no longer has them in stock. If customer chooses and amount that higher than sore has in stock, they will be shown an error message.
-![error](assets/images/error.png)
+
 
 
 
